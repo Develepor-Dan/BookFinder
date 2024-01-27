@@ -15,7 +15,8 @@
 
 
 ## Usage
-![demo of the project]()
+![demo of the project](./assets/BookFinder-Demo.gif)
+
 You will be given a seach engine to be able to search any books. To save your list, you will be able to login or signup. 
 
 ## License
