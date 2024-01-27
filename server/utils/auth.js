@@ -1,15 +1,11 @@
 const jwt = require('jsonwebtoken');
-const { AuthenticationError } = require('apollo-server-errors'); // Import the AuthenticationError
-const { QLError } = require('graphql');
+const { AuthenticationError } = require('apollo-server-express'); // Import the AuthenticationError from apollo-server-express
+
 const secret = 'mysecretsshhhhh';
 const expiration = '2h';
 
 module.exports = {
-  AuthenticationError: new GraphQLError('Could not authenticate user.', {
-    extensions: {
-      code: 'UNAUTHENTICATED',
-    },
-  }),
+  AuthenticationError: new AuthenticationError('Could not authenticate user.'), // Use AuthenticationError from apollo-server-express
   authMiddleware: function ({ req }) {
     // allows token to be sent via req.body, req.query, or headers
     let token = req.body.token || req.query.token || req.headers.authorization;
@@ -26,8 +22,9 @@ module.exports = {
     try {
       const { data } = jwt.verify(token, secret, { maxAge: expiration });
       req.user = data;
-    } catch {
+    } catch (error) {
       console.log('Invalid token');
+      throw new AuthenticationError('Invalid token'); // Throw AuthenticationError when the token is invalid
     }
 
     return req;
